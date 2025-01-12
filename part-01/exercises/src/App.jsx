@@ -1,37 +1,23 @@
-import { Children } from "react";
-
 const App = () => {
   const course = "Half Stack application development";
-  const part1 = "Fundamentals of React";
-  const exercises1 = 10;
-  const part2 = "Using props to pass data";
-  const exercises2 = 7;
-  const part3 = "State of a component";
-  const exercises3 = 14;
+  const part1 = {
+    name: "Fundamentals of React",
+    exercises: 10,
+  };
+  const part2 = {
+    name: "Using props to pass data",
+    exercises: 7,
+  };
+  const part3 = {
+    name: "State of a component",
+    exercises: 14,
+  };
 
   return (
-    // <div>
-    //   <h1>{course}</h1>
-    //   <p>
-    //     {part1} {exercises1}
-    //   </p>
-    //   <p>
-    //     {part2} {exercises2}
-    //   </p>
-    //   <p>
-    //     {part3} {exercises3}
-    //   </p>
-    //   <p>Number of exercises {exercises1 + exercises2 + exercises3}</p>
-    // </div>}
     <div>
       <Header show_title={course} />
-      <Content
-        prop={{
-          partes: [part1, part2, part3],
-          ejercicios: [exercises1, exercises2, exercises3],
-        }}
-      />
-      <Total ejercicios={[exercises1, exercises2, exercises3]} />
+      <Content prop={[part1, part2, part3]} />
+      <Total ejercicios={[part1, part2, part3]} />
     </div>
   );
 };
@@ -44,17 +30,16 @@ const Header = ({ show_title }) => {
   );
 };
 
-const Content = ({
-  prop: {
-    partes: [part1, part2, part3],
-    ejercicios: [exercises1, exercises2, exercises3],
-  },
-}) => {
+const Content = ({ prop: [part1, part2, part3] }) => {
+  const { exercises: exercises1, name: parte1 } = part1;
+  const { exercises: exercises2, name: parte2 } = part2;
+  const { exercises: exercises3, name: parte3 } = part3;
+
   return (
     <>
-      <Part part={part1} exercise={exercises1} />
-      <Part part={part2} exercise={exercises2} />
-      <Part part={part3} exercise={exercises3} />
+      <Part part={parte1} exercise={exercises1} />
+      <Part part={parte2} exercise={exercises2} />
+      <Part part={parte3} exercise={exercises3} />
     </>
   );
 };
@@ -63,7 +48,6 @@ const Part = ({ part, exercise }) => {
   return (
     <>
       <p>
-        {" "}
         {part} {exercise}{" "}
       </p>
     </>
@@ -72,7 +56,7 @@ const Part = ({ part, exercise }) => {
 
 const Total = ({ ejercicios }) => {
   let total = ejercicios.reduce((acc, current) => {
-    return acc + current;
+    return acc + current.exercises;
   }, 0);
 
   return (
