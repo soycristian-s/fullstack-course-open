@@ -7,20 +7,22 @@ const Statistics = ({ comments: { good, neutral, bad } }) => {
 
   if (totalComents !== 0) {
     return (
-      <>
-        <StatisticLine text={"Good"} value={good}></StatisticLine>
-        <StatisticLine text={"Neutral"} value={neutral}></StatisticLine>
-        <StatisticLine text={"Bad"} value={bad}></StatisticLine>
-        <StatisticLine text={"All"} value={totalComents}></StatisticLine>
-        <StatisticLine
-          text={"Average score"}
-          value={averageComents}
-        ></StatisticLine>
-        <StatisticLine
-          text={"Positive score"}
-          value={positiveComents}
-        ></StatisticLine>
-      </>
+      <table>
+        <tbody>
+          <StatisticLine text={"Good"} value={good}></StatisticLine>
+          <StatisticLine text={"Neutral"} value={neutral}></StatisticLine>
+          <StatisticLine text={"Bad"} value={bad}></StatisticLine>
+          <StatisticLine text={"All"} value={totalComents}></StatisticLine>
+          <StatisticLine
+            text={"Average score"}
+            value={averageComents}
+          ></StatisticLine>
+          <StatisticLine
+            text={"Positive score"}
+            value={positiveComents}
+          ></StatisticLine>
+        </tbody>
+      </table>
     );
   } else {
     return <p>No feedback given</p>;
@@ -29,9 +31,10 @@ const Statistics = ({ comments: { good, neutral, bad } }) => {
 
 const StatisticLine = ({ text, value }) => {
   return (
-    <p>
-      {text} {value}
-    </p>
+    <tr>
+      <td>{text}</td>
+      <td>{value}</td>
+    </tr>
   );
 };
 
