@@ -6,6 +6,13 @@ const App = () => {
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
 
+  const handleAverage = () => {
+  }
+
+  const totalComents = good+neutral+bad
+  const averageComents = (good-bad)/totalComents
+  const positiveComents = good/totalComents*100
+
   return (
     <div>
       <h1>give feedback</h1>
@@ -15,6 +22,9 @@ const App = () => {
       <p>Good {good}</p>
       <p>Neutral {neutral}</p>
       <p>Bad {bad}</p>
+      <p>All {totalComents}</p>
+      <p>Average score{averageComents}</p>
+      <p>Positive score{positiveComents} %</p>
     </div>
   );
 };
