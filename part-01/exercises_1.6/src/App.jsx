@@ -1,17 +1,28 @@
 import { useState } from "react";
 
+const Statistics = ({comments:{good, neutral, bad}}) => {
+
+  const totalComents = good+neutral+bad
+  const averageComents = (good-bad)/totalComents || 0
+  const positiveComents = good/totalComents*100 || 0
+
+  return (
+    <>
+      <p>Good {good}</p>
+      <p>Neutral {neutral}</p>
+      <p>Bad {bad}</p>
+      <p>All {totalComents}</p>
+      <p>Average score {averageComents}</p>
+      <p>Positive score {positiveComents} %</p>
+    </>
+  )
+}
+
 const App = () => {
   // guarda los clics de cada botón en su propio estado
   const [good, setGood] = useState(0);
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
-
-  const handleAverage = () => {
-  }
-
-  const totalComents = good+neutral+bad
-  const averageComents = (good-bad)/totalComents
-  const positiveComents = good/totalComents*100
 
   return (
     <div>
@@ -19,12 +30,7 @@ const App = () => {
       <button onClick={() => setGood(good + 1)}>Good</button>
       <button onClick={() => setNeutral(neutral + 1)}>Neutral</button>
       <button onClick={() => setBad(bad + 1)}>Bad</button>
-      <p>Good {good}</p>
-      <p>Neutral {neutral}</p>
-      <p>Bad {bad}</p>
-      <p>All {totalComents}</p>
-      <p>Average score{averageComents}</p>
-      <p>Positive score{positiveComents} %</p>
+      <Statistics comments={{good,neutral,bad}}></Statistics>
     </div>
   );
 };
