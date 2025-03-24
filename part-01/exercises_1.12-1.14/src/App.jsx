@@ -1,5 +1,18 @@
 import { useState } from "react";
 
+const Votest = ({ anecdotes, votes }) => {
+  let votestAnecdote = Object.keys(votes).reduce((max, cur) => {
+    return votes[Number(cur)] > votes[max] ? Number(cur) : max;
+  }, 0);
+
+  return (
+    <>
+      <p>{anecdotes[votestAnecdote]}</p>
+      <p>Has {votes[votestAnecdote]} votes</p>
+    </>
+  );
+};
+
 const App = () => {
   const anecdotes = [
     "If it hurts, do it more often.",
@@ -31,10 +44,13 @@ const App = () => {
 
   return (
     <div>
+      <h2>Anecdote of the day</h2>
       <p>{anecdotes[selected]}</p>
       <p>Has {votes[selected]} votes</p>
       <button onClick={onNext}>Next anecdote</button>
       <button onClick={onVote}>Vote</button>
+      <h2>Anecdote with most votes</h2>
+      <Votest anecdotes={anecdotes} votes={votes}></Votest>
     </div>
   );
 };
