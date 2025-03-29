@@ -20,6 +20,11 @@ const App = () => {
         exercises: 14,
         id: 3,
       },
+      {
+        name: "Redux",
+        exercises: 11,
+        id: 4,
+      },
     ],
   };
 
@@ -58,7 +63,7 @@ const Part = ({ parts }) => {
     <>
       {parts.map((part) => (
         <React.Fragment key={part.id}>
-          <p>note.name note.exercise</p>
+          <p>{part.name} {part.exercises}</p>
         </React.Fragment>
       ))}
     </>
