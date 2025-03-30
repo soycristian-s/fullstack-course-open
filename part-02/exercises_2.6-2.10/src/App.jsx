@@ -1,16 +1,21 @@
 import { useState } from "react";
 
 const App = () => {
-  const [persons, setPersons] = useState([{ name: "Arto Hellas" }]);
+  const [persons, setPersons] = useState([
+    { name: "Arto Hellas", number: "040-123456" },
+  ]);
   const [newName, setNewName] = useState("");
+  const [newNumber, setNewNumber] = useState("");
 
   const handleNameChange = (e) => setNewName(e.target.value);
+  const handleNumberChange = (e) => setNewNumber(e.target.value);
 
   const addPerson = (e) => {
     e.preventDefault();
-    const newPerson = { name: newName };
+    const newPerson = { name: newName, number: newNumber };
     const isNewName = !persons.some((person) => person.name === newName);
     setNewName("");
+    setNewNumber("");
     isNewName
       ? setPersons(persons.concat(newPerson))
       : alert(`${newName} ya se ingresó.`);
@@ -24,12 +29,17 @@ const App = () => {
           name: <input value={newName} onChange={handleNameChange} />
         </div>
         <div>
+          number: <input value={newNumber} onChange={handleNumberChange} />
+        </div>
+        <div>
           <button type="submit">add</button>
         </div>
       </form>
       <h2>Numbers</h2>
       {persons.map((person) => (
-        <div key={person.name}>{person.name}</div>
+        <div key={person.name}>
+          {person.name} {person.number}
+        </div>
       ))}
     </div>
   );
