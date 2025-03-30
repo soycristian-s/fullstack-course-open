@@ -9,8 +9,11 @@ const App = () => {
   const addPerson = (e) => {
     e.preventDefault();
     const newPerson = { name: newName };
-    setNewName("")
-    return setPersons(persons.concat(newPerson));
+    const isNewName = !persons.some((person) => person.name === newName);
+    setNewName("");
+    isNewName
+      ? setPersons(persons.concat(newPerson))
+      : alert(`${newName} ya se ingresó.`);
   };
 
   return (
@@ -26,7 +29,7 @@ const App = () => {
       </form>
       <h2>Numbers</h2>
       {persons.map((person) => (
-        <div key={person}>{person.name}</div>
+        <div key={person.name}>{person.name}</div>
       ))}
     </div>
   );
