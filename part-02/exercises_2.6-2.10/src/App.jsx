@@ -1,5 +1,43 @@
 import { useState } from "react";
 
+const FilterSeccion = ({ inputs: [filterBy, handleFilterBy] }) => {
+  return (
+    <div>
+      filter shown with: <input value={filterBy} onChange={handleFilterBy} />
+    </div>
+  );
+};
+
+const PersonForm = ({ handler, children }) => {
+  return (
+    <form onSubmit={handler}>
+      {children}
+      <div>
+        <button type="submit">add</button>
+      </div>
+    </form>
+  );
+};
+
+const PersonLineForm = ({ inputs: [value, handler], label }) => {
+  return (
+    <>
+      <p>
+        {label}: <input value={value} onChange={handler} />
+      </p>
+    </>
+  );
+};
+
+const PersonDisplay = ({ personList }) => {
+  return personList.map((person) => (
+    <div key={person.name}>
+      <strong>Name:</strong> {person.name} <strong>Number:</strong>{" "}
+      {person.number}
+    </div>
+  ));
+};
+
 const App = () => {
   const [persons, setPersons] = useState([
     { name: "Arto Hellas", number: "040-123456", id: 1 },
@@ -27,38 +65,35 @@ const App = () => {
   const addPerson = (e) => {
     e.preventDefault();
     const newPerson = { name: newName, number: newNumber };
-    const isNewName = !persons.some((person) => person.name === newName);
-    setNewName("");
-    setNewNumber("");
-    isNewName
-      ? setPersons(persons.concat(newPerson))
-      : alert(`${newName} ya se ingresó.`);
+    if (!persons.some((person) => person.name === newName)) {
+      setNewName("");
+      setNewNumber("");
+      setPersons(persons.concat(newPerson));
+      setShowPerson(persons.concat(newPerson));
+    } else {
+      alert(`${newName} ya se ingresó.`);
+    }
   };
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        filter shown with: <input value={filterBy} onChange={handleFilterBy} />
-      </div>
+      <FilterSeccion inputs={[filterBy, handleFilterBy]}></FilterSeccion>
       <h2>Add a New</h2>
-      <form onSubmit={addPerson}>
-        <div>
-          name: <input value={newName} onChange={handleNameChange} />
-        </div>
-        <div>
-          number: <input value={newNumber} onChange={handleNumberChange} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+
+      <PersonForm handler={addPerson}>
+        <PersonLineForm
+          label={"name"}
+          inputs={[newName, handleNameChange]}
+        ></PersonLineForm>
+        <PersonLineForm
+          label={"number"}
+          inputs={[newNumber, handleNumberChange]}
+        ></PersonLineForm>
+      </PersonForm>
+
       <h2>Numbers</h2>
-      {showPerson.map((person) => (
-        <div key={person.name}>
-          {person.name} {person.number}
-        </div>
-      ))}
+      <PersonDisplay personList={showPerson}></PersonDisplay>
     </div>
   );
 };
