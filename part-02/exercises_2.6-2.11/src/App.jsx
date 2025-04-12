@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
+import { useState, useEffect } from "react";gg
+import phonebookService from "./services/numbers";
 
 const FilterSeccion = ({ inputs: [filterBy, handleFilterBy] }) => {
   return (
@@ -47,9 +47,10 @@ const App = () => {
   const [showPerson, setShowPerson] = useState([...persons]);
 
   useEffect(() => {
-    axios.get("http://localhost:3001/persons").then((response) => {
-      setPersons(response.data);
-      setShowPerson(response.data);
+    phonebookService.getAll().then((data) => {
+      console.log(data, "esta es la solicitud");
+      setPersons(data);
+      setShowPerson(data);
     });
   }, []);
 
@@ -73,7 +74,10 @@ const App = () => {
       setNewNumber("");
       setPersons(persons.concat(newPerson));
       setShowPerson(persons.concat(newPerson));
-      axios.post("http://localhost:3001/persons", newPerson)
+
+      phonebookService.create(newPerson).then((data) => {
+        console.log(data, "Creación");
+      });
     } else {
       alert(`${newName} ya se ingresó.`);
     }
