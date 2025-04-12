@@ -34,7 +34,7 @@ const PersonDisplay = ({ personList, handler }) => {
   return personList.map((person) => (
     <div key={person.id}>
       <strong>Name:</strong> {person.name} <strong>Number:</strong>{" "}
-      {person.number}{" "}
+      {person.number}
       <button onClick={(e) => handler(e, person)}>Delete</button>
     </div>
   ));
@@ -48,7 +48,6 @@ const App = () => {
 
   useEffect(() => {
     phonebookService.getAll().then((data) => {
-      console.log(data, "esta es la solicitud");
       setPersons(data);
     });
   }, []);
@@ -62,16 +61,30 @@ const App = () => {
 
   const addPerson = (e) => {
     e.preventDefault();
-    const newPerson = { name: newName, number: newNumber };
+    let newPerson = { name: newName, number: newNumber };
     if (!persons.some((person) => person.name === newName)) {
       setNewName("");
       setNewNumber("");
-      setPersons(persons.concat(newPerson));
       phonebookService.create(newPerson).then((data) => {
-        console.log(data, "Creación");
+        setPersons(persons.concat(data));
       });
     } else {
-      alert(`${newName} ya se ingresó.`);
+      if (
+        confirm(
+          `${newName} ya se ingresó, reemplazamos el antiguo numero con el nuevo?`
+        )
+      ) {
+        const personToUpdate = persons.filter(
+          (person) => person.name === newName
+        )[0];
+        newPerson = { ...personToUpdate, number: newNumber };
+        phonebookService.updateNumber(newPerson).then((data) => {
+          console.log(data);
+          let newPersons = persons.map((p) => (p.id === data.id ? data : p));
+          console.log(newPersons);
+          setPersons(newPersons);
+        });
+      }
     }
   };
 

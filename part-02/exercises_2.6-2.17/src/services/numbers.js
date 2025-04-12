@@ -16,4 +16,9 @@ const deleteNumber = (id) => {
   return response.then((resp) => resp.data);
 };
 
-export default { getAll, create, deleteNumber };
+const updateNumber = (object) => {
+  const response = axios.put(baseUrl + `/${object.id}`, object);
+  return response.then((resp) => resp.data);
+};
+
+export default { getAll, create, deleteNumber, updateNumber };
