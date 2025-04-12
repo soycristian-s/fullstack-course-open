@@ -73,6 +73,7 @@ const App = () => {
       setNewNumber("");
       setPersons(persons.concat(newPerson));
       setShowPerson(persons.concat(newPerson));
+      axios.post("http://localhost:3001/persons", newPerson)
     } else {
       alert(`${newName} ya se ingresó.`);
     }
