@@ -21,11 +21,6 @@
       "id": "4"
     },
     {
-      "id": "5",
-      "name": "aaa",
-      "number": "12346"
-    },
-    {
       "id": "7adf",
       "name": "Una new person",
       "number": "123456789"
@@ -34,31 +29,6 @@
       "id": "71cb",
       "name": "Otro n",
       "number": "1231"
-    },
-    {
-      "id": "e4cc",
-      "name": "y uno nuevo",
-      "number": "123416"
-    },
-    {
-      "id": "2f33",
-      "name": "aaab",
-      "number": "123456"
-    },
-    {
-      "id": "60a9",
-      "name": "alejo",
-      "number": "789456123"
-    },
-    {
-      "id": "2ea1",
-      "name": "alejan",
-      "number": "12357"
-    },
-    {
-      "id": "8236",
-      "name": "alejand",
-      "number": "123456789"
     }
   ]
 }

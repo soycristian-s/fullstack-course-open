@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";gg
+import { useState, useEffect } from "react";
 import phonebookService from "./services/numbers";
 
 const FilterSeccion = ({ inputs: [filterBy, handleFilterBy] }) => {
@@ -30,11 +30,12 @@ const PersonLineForm = ({ inputs: [value, handler], label }) => {
   );
 };
 
-const PersonDisplay = ({ personList }) => {
+const PersonDisplay = ({ personList, handler }) => {
   return personList.map((person) => (
     <div key={person.id}>
       <strong>Name:</strong> {person.name} <strong>Number:</strong>{" "}
-      {person.number}
+      {person.number}{" "}
+      <button onClick={(e) => handler(e, person)}>Delete</button>
     </div>
   ));
 };
@@ -44,13 +45,11 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filterBy, setFilterBy] = useState("");
-  const [showPerson, setShowPerson] = useState([...persons]);
 
   useEffect(() => {
     phonebookService.getAll().then((data) => {
       console.log(data, "esta es la solicitud");
       setPersons(data);
-      setShowPerson(data);
     });
   }, []);
 
@@ -58,11 +57,6 @@ const App = () => {
   const handleNumberChange = (e) => setNewNumber(e.target.value);
   const handleFilterBy = (e) => {
     const nameFilter = e.target.value;
-    setShowPerson(
-      persons.filter((p) =>
-        p.name.toLowerCase().includes(nameFilter.toLowerCase())
-      )
-    );
     return setFilterBy(nameFilter);
   };
 
@@ -73,13 +67,26 @@ const App = () => {
       setNewName("");
       setNewNumber("");
       setPersons(persons.concat(newPerson));
-      setShowPerson(persons.concat(newPerson));
-
       phonebookService.create(newPerson).then((data) => {
         console.log(data, "Creación");
       });
     } else {
       alert(`${newName} ya se ingresó.`);
+    }
+  };
+
+  const personsToShow = filterBy
+    ? persons.filter((p) =>
+        p.name.toLowerCase().includes(filterBy.toLowerCase())
+      )
+    : persons;
+
+  const removePerson = (e, person) => {
+    e.preventDefault();
+    if (window.confirm(`Do you really want to delete ${person.name}?`)) {
+      phonebookService.deleteNumber(person.id).then((deletedPerson) => {
+        setPersons(persons.filter((p) => p.id !== deletedPerson.id));
+      });
     }
   };
 
@@ -101,7 +108,10 @@ const App = () => {
       </PersonForm>
 
       <h2>Numbers</h2>
-      <PersonDisplay personList={showPerson}></PersonDisplay>
+      <PersonDisplay
+        personList={personsToShow}
+        handler={removePerson}
+      ></PersonDisplay>
     </div>
   );
 };
