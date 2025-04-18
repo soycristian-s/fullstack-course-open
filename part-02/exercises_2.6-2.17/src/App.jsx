@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import phonebookService from "./services/numbers";
+import Notification from "./components/Notification";
 
 const FilterSeccion = ({ inputs: [filterBy, handleFilterBy] }) => {
   return (
@@ -45,6 +46,7 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filterBy, setFilterBy] = useState("");
+  const [notiName, setNotiName] = useState("");
 
   useEffect(() => {
     phonebookService.getAll().then((data) => {
@@ -61,12 +63,20 @@ const App = () => {
 
   const addPerson = (e) => {
     e.preventDefault();
+    const handleNotification = (data) => {
+      setNotiName(data.name);
+      setTimeout(() => {
+        setNotiName("");
+      }, 5000);
+    };
+
     let newPerson = { name: newName, number: newNumber };
     if (!persons.some((person) => person.name === newName)) {
       setNewName("");
       setNewNumber("");
       phonebookService.create(newPerson).then((data) => {
         setPersons(persons.concat(data));
+        handleNotification(data);
       });
     } else {
       if (
@@ -78,8 +88,11 @@ const App = () => {
           (person) => person.name === newName
         )[0];
         newPerson = { ...personToUpdate, number: newNumber };
+        setNewName("");
+        setNewNumber("");
         phonebookService.updateNumber(newPerson).then((data) => {
           console.log(data);
+          handleNotification(data);
           let newPersons = persons.map((p) => (p.id === data.id ? data : p));
           console.log(newPersons);
           setPersons(newPersons);
@@ -108,7 +121,7 @@ const App = () => {
       <h2>Phonebook</h2>
       <FilterSeccion inputs={[filterBy, handleFilterBy]}></FilterSeccion>
       <h2>Add a New</h2>
-
+      <Notification user={notiName}></Notification>
       <PersonForm handler={addPerson}>
         <PersonLineForm
           label={"name"}
