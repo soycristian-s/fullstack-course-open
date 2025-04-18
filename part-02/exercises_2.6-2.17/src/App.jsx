@@ -47,6 +47,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [filterBy, setFilterBy] = useState("");
   const [notiName, setNotiName] = useState("");
+  const [servError, setServError] = useState(false);
 
   useEffect(() => {
     phonebookService.getAll().then((data) => {
@@ -63,11 +64,11 @@ const App = () => {
 
   const addPerson = (e) => {
     e.preventDefault();
-    const handleNotification = (data) => {
-      setNotiName(data.name);
+    const handleNotification = (name) => {
+      setNotiName(name);
       setTimeout(() => {
         setNotiName("");
-      }, 5000);
+      }, 3000);
     };
 
     let newPerson = { name: newName, number: newNumber };
@@ -76,7 +77,7 @@ const App = () => {
       setNewNumber("");
       phonebookService.create(newPerson).then((data) => {
         setPersons(persons.concat(data));
-        handleNotification(data);
+        handleNotification(data.name);
       });
     } else {
       if (
@@ -90,13 +91,19 @@ const App = () => {
         newPerson = { ...personToUpdate, number: newNumber };
         setNewName("");
         setNewNumber("");
-        phonebookService.updateNumber(newPerson).then((data) => {
-          console.log(data);
-          handleNotification(data);
-          let newPersons = persons.map((p) => (p.id === data.id ? data : p));
-          console.log(newPersons);
-          setPersons(newPersons);
-        });
+        phonebookService
+          .updateNumber(newPerson)
+          .then((data) => {
+            console.log(data);
+            handleNotification(data.name);
+            let newPersons = persons.map((p) => (p.id === data.id ? data : p));
+            console.log(newPersons);
+            setPersons(newPersons);
+          })
+          .catch(() => {
+            setServError(true);
+            handleNotification(newName);
+          });
       }
     }
   };
@@ -121,7 +128,7 @@ const App = () => {
       <h2>Phonebook</h2>
       <FilterSeccion inputs={[filterBy, handleFilterBy]}></FilterSeccion>
       <h2>Add a New</h2>
-      <Notification user={notiName}></Notification>
+      <Notification error={servError} user={notiName}></Notification>
       <PersonForm handler={addPerson}>
         <PersonLineForm
           label={"name"}
