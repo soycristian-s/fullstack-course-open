@@ -1,11 +1,70 @@
-import Note from "./components/Note";
 import { useState, useEffect } from "react";
 import countryService from "./services/countries";
+
+const CountryDetail = ({ country }) => {
+  const [mostrar, setMostrar] = useState(false);
+  const toggle = () => setMostrar(!mostrar);
+
+  return (
+    <div>
+      {country.name.common}
+      <button onClick={toggle}>Show</button>
+      {mostrar && (
+        <div>
+          <h1>{country.name.official}</h1>
+          <p>Capital {country.capital[0]}</p>
+          <p>Area {country.area}</p>
+          <h2>Languages</h2>
+          <ul>
+            {Object.values(country.languages).map((lan) => (
+              <li key={lan}>{lan}</li>
+            ))}
+          </ul>
+          <img src={country.flags.png} alt={country.flags.alt}></img>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const CountriesDisplay = ({ filteredCountries }) => {
+  if (filteredCountries === 250) {
+    return <p>Please enter a filter</p>;
+  } else if (filteredCountries.length > 10) {
+    return <p>Too many matches, specify another filter</p>;
+  } else if (filteredCountries.length > 1 && filteredCountries.length <= 10) {
+    return (
+      <div>
+        {filteredCountries.map((cou) => (
+          <CountryDetail key={cou.ccn3} country={cou}></CountryDetail>
+        ))}
+      </div>
+    );
+  } else if (filteredCountries.length === 1) {
+    let oneCountry = filteredCountries[0];
+    let countryLanguages = Object.values(oneCountry.languages);
+    return (
+      <div>
+        <h1>{oneCountry.name.official}</h1>
+        <p>Capital {oneCountry.capital[0]}</p>
+        <p>Area {oneCountry.area}</p>
+        <h2>Languages</h2>
+        <ul>
+          {countryLanguages.map((lan) => (
+            <li key={lan}>{lan}</li>
+          ))}
+        </ul>
+        <img src={oneCountry.flags.png} alt={oneCountry.flags.alt}></img>
+      </div>
+    );
+  } else {
+    return <p>Please enter another filter</p>;
+  }
+};
 
 const App = () => {
   const [listCountries, setListCountries] = useState([]);
   const [newCountry, setNewCountry] = useState("a new country");
-  const [errorMessage, setErrorMessage] = useState("some error happened...");
 
   useEffect(() => {
     countryService.getAllCountries().then((response) => {
@@ -22,47 +81,14 @@ const App = () => {
   );
   // console.log(filteredCountries.length);
 
-  let countriesToShow;
-
-  if (newCountry === "") {
-    countriesToShow = <p>Please enter a filter</p>;
-  } else if (filteredCountries.length > 10) {
-    countriesToShow = <p>Too many matches, specify another filter</p>;
-  } else if (filteredCountries.length > 1 && filteredCountries.length <= 10) {
-    countriesToShow = (
-      <div>
-        {filteredCountries.map((Cou) => (
-          <div key={Cou.ccn3}> {Cou.name.common}</div>
-        ))}
-      </div>
-    );
-  } else if (filteredCountries.length === 1) {
-    let oneCountry = filteredCountries[0];
-    let countryLanguages = Object.values(oneCountry.languages);
-    countriesToShow = (
-      <div>
-        <h1>{oneCountry.name.official}</h1>
-        <p>Capital {oneCountry.capital[0]}</p>
-        <p>Area {oneCountry.area}</p>
-        <h2>Languages</h2>
-        <ul>
-          {countryLanguages.map((lan) => (
-            <li key={lan}>{lan}</li>
-          ))}
-        </ul>
-        <img src={oneCountry.flags.png} alt={oneCountry.flags.alt}></img>
-      </div>
-    )
-  } else {
-    countriesToShow = <p>Please enter another filter</p>;
-  }
-
   return (
     <div>
       <p>
         Countries <input value={newCountry} onChange={handleNewCountry} />
       </p>
-      {countriesToShow}
+      <CountriesDisplay
+        filteredCountries={filteredCountries}
+      ></CountriesDisplay>
     </div>
   );
 };
