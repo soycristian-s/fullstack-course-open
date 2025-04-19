@@ -1,19 +1,21 @@
 import axios from "axios";
-const baseUrl = "https://studies.cs.helsinki.fi/restcountries/api";
+const dataBaseUrl = "https://studies.cs.helsinki.fi/restcountries/api";
+const wheatherUrl = "https://api.openweathermap.org/";
+const apiKey = import.meta.env.VITE_API_KEY;
 
 const getAllCountries = () => {
-  return axios.get( `${baseUrl}/all`);
+  return axios.get(`${dataBaseUrl}/all`);
 };
 const getCountry = (name) => {
-  return axios.get(`${baseUrl}/name1/${name}`);
+  return axios.get(`${dataBaseUrl}/name1/${name}`);
 };
 
-const create = (newObject) => {
-  return axios.post(baseUrl, newObject);
+const getWeather = (city) => {
+  return axios.get(`${wheatherUrl}data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`);
 };
 
-const update = (id, newObject) => {
-  return axios.put(`${baseUrl}/${id}`, newObject);
+const getWeatherIcon = (id) => {
+  return axios.get(`${wheatherUrl}img/wn/${id}@2x.png`);
 };
 
-export default { getAllCountries, getCountry, create, update };
+export default { getAllCountries, getCountry, getWeather };

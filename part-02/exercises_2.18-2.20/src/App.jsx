@@ -28,6 +28,18 @@ const CountryDetail = ({ country }) => {
 };
 
 const CountriesDisplay = ({ filteredCountries }) => {
+  const [tempData, setTempData] = useState({});
+  useEffect(() => {
+    if (filteredCountries.length === 1) {
+      countryService
+        .getWeather(filteredCountries[0].capital[0])
+        .then((response) => {
+          setTempData(response.data);
+          // console.log(response.data.weather[0].icon)
+        });
+    }
+  }, [filteredCountries]);
+
   if (filteredCountries === 250) {
     return <p>Please enter a filter</p>;
   } else if (filteredCountries.length > 10) {
@@ -43,6 +55,7 @@ const CountriesDisplay = ({ filteredCountries }) => {
   } else if (filteredCountries.length === 1) {
     let oneCountry = filteredCountries[0];
     let countryLanguages = Object.values(oneCountry.languages);
+
     return (
       <div>
         <h1>{oneCountry.name.official}</h1>
@@ -55,6 +68,14 @@ const CountriesDisplay = ({ filteredCountries }) => {
           ))}
         </ul>
         <img src={oneCountry.flags.png} alt={oneCountry.flags.alt}></img>
+        <h2>Weather in {oneCountry.capital[0]}</h2>
+        {tempData.main ? (<>
+          <p>Temperature {tempData.main.temp} Celsius.</p>
+          <img src={`https://openweathermap.org/img/wn/${tempData.weather[0].icon}@2x.png`}></img>
+          <p>Wind {tempData.main.temp} m/s.</p>
+          </>) : (<>
+          <p>Loading data</p>
+          </>)}
       </div>
     );
   } else {
@@ -69,8 +90,6 @@ const App = () => {
   useEffect(() => {
     countryService.getAllCountries().then((response) => {
       setListCountries(response.data);
-      // console.log(response.data[168]);
-      // console.log(listCountries[168].name)
     });
   }, []);
 
@@ -79,7 +98,13 @@ const App = () => {
   const filteredCountries = listCountries.filter((Country) =>
     Country.name.common.toLowerCase().includes(newCountry.toLowerCase())
   );
-  // console.log(filteredCountries.length);
+
+  useEffect(() => {
+    countryService.getWeather("Guatemala City").then((response) => {
+      // console.log(response.data.main.temp, "clima");
+      // const clima = response.data
+    });
+  }, []);
 
   return (
     <div>
