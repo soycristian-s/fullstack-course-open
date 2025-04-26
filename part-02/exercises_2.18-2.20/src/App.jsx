@@ -69,13 +69,19 @@ const CountriesDisplay = ({ filteredCountries }) => {
         </ul>
         <img src={oneCountry.flags.png} alt={oneCountry.flags.alt}></img>
         <h2>Weather in {oneCountry.capital[0]}</h2>
-        {tempData.main ? (<>
-          <p>Temperature {tempData.main.temp} Celsius.</p>
-          <img src={`https://openweathermap.org/img/wn/${tempData.weather[0].icon}@2x.png`}></img>
-          <p>Wind {tempData.main.temp} m/s.</p>
-          </>) : (<>
-          <p>Loading data</p>
-          </>)}
+        {tempData.main ? (
+          <>
+            <p>Temperature {tempData.main.temp} Celsius.</p>
+            <img
+              src={`https://openweathermap.org/img/wn/${tempData.weather[0].icon}@2x.png`}
+            ></img>
+            <p>Wind {tempData.main.temp} m/s.</p>
+          </>
+        ) : (
+          <>
+            <p>Loading data</p>
+          </>
+        )}
       </div>
     );
   } else {
@@ -98,13 +104,6 @@ const App = () => {
   const filteredCountries = listCountries.filter((Country) =>
     Country.name.common.toLowerCase().includes(newCountry.toLowerCase())
   );
-
-  useEffect(() => {
-    countryService.getWeather("Guatemala City").then((response) => {
-      // console.log(response.data.main.temp, "clima");
-      // const clima = response.data
-    });
-  }, []);
 
   return (
     <div>
