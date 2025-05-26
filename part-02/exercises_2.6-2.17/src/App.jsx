@@ -117,8 +117,8 @@ const App = () => {
   const removePerson = (e, person) => {
     e.preventDefault();
     if (window.confirm(`Do you really want to delete ${person.name}?`)) {
-      phonebookService.deleteNumber(person.id).then((deletedPerson) => {
-        setPersons(persons.filter((p) => p.id !== deletedPerson.id));
+      phonebookService.deleteNumber(person.id).then(() => {
+        setPersons(persons.filter((p) => p.id !== person.id));
       });
     }
   };

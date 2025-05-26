@@ -10,7 +10,7 @@ const Footer = () => {
       {" "}
       <br />{" "}
       <em>
-        Note app, Department of Computer Science, University of Helsinki 2024
+        Note app, Department of Computer Science, University of Helsinki 2025
       </em>{" "}
     </div>
   );
@@ -20,7 +20,7 @@ const App = () => {
   const [notes, setNotes] = useState([]);
   const [newNote, setNewNote] = useState("a new note...");
   const [showAll, setShowAll] = useState(true);
-  const [errorMessage, setErrorMessage] = useState("some error happened...");
+  const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
     noteService.getAll().then((response) => {
